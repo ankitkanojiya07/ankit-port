@@ -3,9 +3,8 @@ import HeroSystem from "@/components/HeroSystem";
 import FlagshipCard from "@/components/FlagshipCard";
 import ProjectCard from "@/components/ProjectCard";
 import SectionTitle from "@/components/SectionTitle";
-import CtaBand from "@/components/CtaBand";
 import Reveal from "@/components/Reveal";
-import { profile, stats, services } from "@/lib/content";
+import { profile, stats } from "@/lib/content";
 import { getProjects, getNews, getInterviews } from "@/lib/data";
 
 export const revalidate = 300;
@@ -19,18 +18,15 @@ export default async function Home() {
         <div className="grid-bg absolute inset-0" aria-hidden />
         <div className="relative mx-auto max-w-6xl px-4 sm:px-6 pt-16 pb-20 grid lg:grid-cols-[1fr_1.15fr] gap-12 items-center">
           <div>
-            <p className="font-mono text-xs text-accent mb-4">● for developers · for businesses</p>
-            <h1 className="font-display text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.08]">
-              Tech news and <span className="text-accent">interview experiences</span> for developers.
-              <span className="block text-fg/80 mt-3 text-2xl sm:text-3xl">Software built for businesses.</span>
+            <p className="font-mono text-xs text-accent mb-4">● available for new opportunities</p>
+            <h1 className="font-display text-5xl sm:text-6xl font-semibold tracking-tight leading-[1.05]">
+              Systems that scale.<br />
+              <span className="text-accent">Products that stick.</span>
             </h1>
-            <p className="mt-6 text-lg text-muted max-w-xl leading-relaxed">
-              Read practical tech news and real interview experiences with the rounds, questions and lessons. Need a product built? I develop web platforms, mobile apps, AI systems and cloud infrastructure.
-            </p>
+            <p className="mt-6 text-lg text-muted max-w-xl leading-relaxed">{profile.tagline}</p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/tech-news" className="rounded-full bg-accent text-accent-ink px-6 py-3 font-medium">Read tech news</Link>
-              <Link href="/interview-experience" className="rounded-full border border-line px-6 py-3 font-medium hover:border-accent">Interview experiences</Link>
-              <Link href="/work" className="rounded-full border border-line px-6 py-3 font-medium hover:border-accent">See work</Link>
+              <Link href="/work" className="rounded-full bg-accent text-accent-ink px-6 py-3 font-medium">See my work</Link>
+              <Link href="/contact" className="rounded-full border border-line px-6 py-3 font-medium hover:border-accent">Get in touch</Link>
             </div>
             <dl className="mt-10 grid grid-cols-3 gap-4 max-w-md">
               {stats.map((s) => (
@@ -46,43 +42,8 @@ export default async function Home() {
       </section>
 
       <div className="mx-auto max-w-6xl px-4 sm:px-6 space-y-24">
-        <section className="grid lg:grid-cols-2 gap-10" aria-label="Latest articles">
-          <div>
-            <SectionTitle n="01" title="Latest tech news" sub="What's happening in software, AI and cloud, explained for working developers." />
-            <Feed
-              items={news.map((n) => ({ href: `/tech-news/${n.slug}`, title: n.title, meta: new Date(n.created_at).toLocaleDateString("en-GB"), body: n.summary }))}
-              empty="Fresh tech news is on its way. Check back soon."
-            />
-            <Link href="/tech-news" className="inline-block mt-4 font-mono text-sm text-accent">all tech news →</Link>
-          </div>
-          <div>
-            <SectionTitle n="02" title="Interview experiences" sub="Real software interview rounds, questions asked and tips from candidates." />
-            <Feed
-              items={interviews.map((n) => ({ href: `/interview-experience/${n.slug}`, title: `${n.company} — ${n.role}`, meta: n.outcome, body: n.summary }))}
-              empty="The first interview experiences are coming soon."
-            />
-            <Link href="/interview-experience" className="inline-block mt-4 font-mono text-sm text-accent">all interview experiences →</Link>
-          </div>
-        </section>
-
-        <section aria-label="Services">
-          <SectionTitle n="03" title="Software development services" sub="From idea to production: apps, platforms, cloud and the search visibility to get found." />
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {services.map((s, i) => (
-              <Reveal key={s.title} delay={i * 0.04}>
-                <Link href="/services" className="block h-full rounded-2xl border border-line bg-surface p-5 hover:border-accent transition-colors">
-                  <h3 className="font-display text-lg font-semibold">{s.title}</h3>
-                  <p className="text-sm text-muted mt-1.5 line-clamp-3">{s.body}</p>
-                </Link>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        <CtaBand />
-
-        <section aria-label="Selected work">
-          <SectionTitle n="04" title="Proof of work" sub="A mobile app with 20,000+ downloads and live websites built for clients." />
+        <section>
+          <SectionTitle n="01" title="Featured work" />
           <FlagshipCard />
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mt-5">
             {featured.map((p, i) => <ProjectCard key={p.id} p={p} index={i} />)}
@@ -90,10 +51,17 @@ export default async function Home() {
           <Link href="/work" className="inline-block mt-6 font-mono text-sm text-accent">all projects →</Link>
         </section>
 
-        <section aria-label="About" className="max-w-3xl">
-          <SectionTitle n="05" title="About Ankit" />
-          <p className="text-lg leading-relaxed text-fg/90">{profile.intro[0]}</p>
-          <Link href="/about" className="inline-block mt-4 font-mono text-sm text-accent">more about me →</Link>
+        <section className="grid lg:grid-cols-2 gap-10">
+          <div>
+            <SectionTitle n="02" title="Tech news" sub="What I'm reading and noticing in tech." />
+            <Feed items={news.map((n) => ({ href: `/tech-news/${n.slug}`, title: n.title, meta: new Date(n.created_at).toLocaleDateString("en-GB"), body: n.summary }))} empty="First tech news coming soon." />
+            <Link href="/tech-news" className="inline-block mt-4 font-mono text-sm text-accent">all tech news →</Link>
+          </div>
+          <div>
+            <SectionTitle n="03" title="Interview experience" sub="Rounds, questions and lessons from real interviews." />
+            <Feed items={interviews.map((n) => ({ href: `/interview-experience/${n.slug}`, title: `${n.company} — ${n.role}`, meta: n.outcome, body: n.summary }))} empty="First experiences coming soon." />
+            <Link href="/interview-experience" className="inline-block mt-4 font-mono text-sm text-accent">all experiences →</Link>
+          </div>
         </section>
       </div>
     </>
@@ -109,7 +77,7 @@ function Feed({ items, empty }: { items: { href: string; title: string; meta: st
           <Reveal>
             <Link href={i.href} className="block py-4 hover:text-accent transition-colors">
               <p className="font-mono text-xs text-muted">{i.meta}</p>
-              <h3 className="font-display text-lg font-semibold">{i.title}</h3>
+              <p className="font-display text-lg font-semibold">{i.title}</p>
               <p className="text-sm text-muted line-clamp-2">{i.body}</p>
             </Link>
           </Reveal>
