@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/browser";
 import { slugify } from "@/lib/slug";
+import { learnCategoryLabels } from "@/lib/content";
 
 type Field = { name: string; label: string; type?: "text" | "textarea" | "checkbox" | "tags" | "url" | "select"; options?: string[]; required?: boolean };
 type Resource = { key: string; table: string; label: string; fields: Field[]; titleOf: (r: Row) => string; slugFrom?: string; readOnly?: boolean; order: string };
@@ -30,6 +31,18 @@ const resources: Resource[] = [
       { name: "rounds", label: "Rounds (e.g. OA, DSA, System design, HR)" },
       { name: "summary", label: "Summary", type: "textarea" },
       { name: "body", label: "Details (Markdown)", type: "textarea" },
+      { name: "tags", label: "Tags (comma separated)", type: "tags" },
+      { name: "published", label: "Published", type: "checkbox" },
+    ],
+  },
+  {
+    key: "learn", table: "learn_articles", label: "Learn", slugFrom: "title", order: "created_at", titleOf: (r) => `${r.category} — ${r.title}`,
+    fields: [
+      { name: "title", label: "Title", required: true },
+      { name: "category", label: "Category", type: "select", options: learnCategoryLabels },
+      { name: "level", label: "Level", type: "select", options: ["Beginner", "Intermediate", "Advanced"] },
+      { name: "summary", label: "Summary", type: "textarea" },
+      { name: "body", label: "Body (Markdown)", type: "textarea" },
       { name: "tags", label: "Tags (comma separated)", type: "tags" },
       { name: "published", label: "Published", type: "checkbox" },
     ],

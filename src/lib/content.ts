@@ -118,3 +118,25 @@ export const categories: ("All" | ProjectCategory)[] = [
   "AI",
   "E-commerce & UI",
 ];
+
+/** Learn section: curated engineering topics. `label` is stored in the DB `category` column;
+ * `slug` is the URL segment. Keep these in sync with the admin dashboard select options. */
+export type LearnCategory = { slug: string; label: string; blurb: string };
+
+export const learnCategories: LearnCategory[] = [
+  { slug: "system-design", label: "System Design", blurb: "Scaling, caching, load balancing and designing real-world systems." },
+  { slug: "frontend", label: "Frontend", blurb: "Rendering, React performance, Core Web Vitals and accessibility." },
+  { slug: "backend", label: "Backend", blurb: "APIs, auth, queues, resilience and service architecture." },
+  { slug: "dsa", label: "DSA", blurb: "Data structures, algorithms and patterns for interviews." },
+  { slug: "devops-cloud", label: "DevOps & Cloud", blurb: "CI/CD, Docker, Kubernetes, IaC and observability." },
+  { slug: "databases", label: "Databases", blurb: "SQL vs NoSQL, indexing, transactions and query tuning." },
+  { slug: "ai-ml", label: "AI / ML", blurb: "LLMs, prompting, RAG and building AI agents." },
+];
+
+export const learnCategoryBySlug = (slug: string): LearnCategory | undefined =>
+  learnCategories.find((c) => c.slug === slug);
+
+export const learnCategoryByLabel = (label: string): LearnCategory | undefined =>
+  learnCategories.find((c) => c.label === label);
+
+export const learnCategoryLabels = learnCategories.map((c) => c.label);

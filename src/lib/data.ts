@@ -11,6 +11,10 @@ export type Interview = {
   id: string; company: string; role: string; slug: string; outcome: string; rounds: string;
   summary: string; body: string; tags: string[]; published: boolean; created_at: string;
 };
+export type LearnArticle = {
+  id: string; title: string; slug: string; category: string; level: string;
+  summary: string; body: string; tags: string[]; published: boolean; sort: number; created_at: string;
+};
 
 async function safe<T>(fn: () => PromiseLike<{ data: T | null; error: unknown }>, fallback: T): Promise<T> {
   if (!hasSupabase()) return fallback;
@@ -53,6 +57,31 @@ export async function getInterviewBySlug(slug: string): Promise<Interview | null
   if (!hasSupabase()) return null;
   const sb = createClient();
   const rows = await safe(() => sb.from("interview_experiences").select("*").eq("slug", slug).eq("published", true).limit(1), [] as Interview[]);
+  return rows[0] ?? null;
+}
+
+export async function getLearnArticles(limit?: number): Promise<LearnArticle[]> {
+  if (!hasSupabase()) return [];
+  const sb = createClient();
+  return safe(() => {
+    let q = sb.from("learn_articles").select("*").eq("published", true)
+      .order("sort", { ascending: true }).order("created_at", { ascending: false });
+    if (limit) q = q.limit(limit);
+    return q;
+  }, [] as LearnArticle[]);
+}
+
+export async function getLearnByCategory(categoryLabel: string): Promise<LearnArticle[]> {
+  if (!hasSupabase()) return [];
+  const sb = createClient();
+  return safe(() => sb.from("learn_articles").select("*").eq("published", true).eq("category", categoryLabel)
+    .order("sort", { ascending: true }).order("created_at", { ascending: false }), [] as LearnArticle[]);
+}
+
+export async function getLearnBySlug(slug: string): Promise<LearnArticle | null> {
+  if (!hasSupabase()) return null;
+  const sb = createClient();
+  const rows = await safe(() => sb.from("learn_articles").select("*").eq("slug", slug).eq("published", true).limit(1), [] as LearnArticle[]);
   return rows[0] ?? null;
 }
 

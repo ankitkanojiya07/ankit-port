@@ -1,11 +1,11 @@
 import { abs, SITE_URL, SITE_NAME, BOOKING_URL } from "@/lib/site";
-import { profile, services, experience, education, skillGroups, flagship, staticProjects } from "@/lib/content";
-import { getNews, getInterviews } from "@/lib/data";
+import { profile, services, experience, education, skillGroups, flagship, staticProjects, learnCategoryByLabel } from "@/lib/content";
+import { getNews, getInterviews, getLearnArticles } from "@/lib/data";
 
 export const revalidate = 3600;
 
 export async function GET() {
-  const [news, interviews] = await Promise.all([getNews(), getInterviews()]);
+  const [news, interviews, learn] = await Promise.all([getNews(), getInterviews(), getLearnArticles()]);
   const lines: string[] = [
     `# ${SITE_NAME}`,
     "",
@@ -23,6 +23,7 @@ export async function GET() {
     `- [About](${abs("/about")}): Background, experience and education`,
     `- [Services](${abs("/services")}): What I can build for you`,
     `- [Work](${abs("/work")}): Portfolio of shipped projects`,
+    `- [Learn](${abs("/learn")}): Guides on system design, frontend, backend, DSA, DevOps, databases and AI/ML`,
     `- [Tech News](${abs("/tech-news")}): Short write-ups on tech news`,
     `- [Interview Experience](${abs("/interview-experience")}): Real interview experiences and tips`,
     `- [Contact](${abs("/contact")}): Send a message`,
@@ -44,6 +45,9 @@ export async function GET() {
     "## Links",
     ...profile.socials.map((s) => `- [${s.label}](${s.href})`),
   ];
+  if (learn.length) {
+    lines.push("", "## Learn", ...learn.map((a) => `- [${a.title}](${abs(`/learn/${learnCategoryByLabel(a.category)?.slug ?? "system-design"}/${a.slug}`)}) [${a.category}]: ${a.summary}`));
+  }
   if (news.length) {
     lines.push("", "## Tech News", ...news.map((n) => `- [${n.title}](${abs(`/tech-news/${n.slug}`)}): ${n.summary}`));
   }
